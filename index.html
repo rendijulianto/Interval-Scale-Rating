@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horizontal Interval Rating Scale with Red Indicator Block</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    canvas {
+        border: 1px solid #ccc;
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+
+<h2>Horizontal Interval Rating Scale with Red Indicator Block</h2>
+
+<div>
+    <label for="percentage">Percentage:</label>
+    <input type="number" id="percentage" value="20" min="20" max="100" step="20">
+</div>
+
+<div>
+    <label for="additionalInfo">Additional Info:</label>
+    <input type="text" id="additionalInfo" value="(45)">
+</div>
+
+<button onclick="drawScale()">Generate Scale</button>
+
+<canvas id="myCanvas" width="700" height="200"></canvas>
+
+<script>
+    function drawScale() {
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const lineLength = 250;
+        const startX = centerX - lineLength;
+        const endX = centerX + lineLength;
+        const startY = centerY;
+        const endY = centerY;
+
+        // Draw scale line from 20% to 100%
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.lineWidth = 4; // Set the line width
+        ctx.stroke();
+
+        // Draw tick marks, labels, and vertical blocks for each interval
+        for (let i = 20; i <= 100; i += 20) {
+            const tickX = startX + ((i - 20) / 80) * (endX - startX);
+            const tickY = centerY;
+            const tickLabelX = tickX;
+            const tickLabelY = tickY + 20;
+
+            ctx.beginPath();
+            ctx.moveTo(tickX, tickY);
+            ctx.lineTo(tickX, tickY + 25);
+            ctx.lineTo(tickX, tickY - 25);
+            ctx.stroke();
+
+            // Display category text directly below and above the scale
+            ctx.fillStyle = "black";
+            ctx.font = "16px Arial";
+            ctx.textAlign = "center";
+
+            // Adjusted position for category above the scale
+            ctx.fillText(getCategory(i), tickLabelX, tickLabelY - 70);
+            ctx.fillStyle = "black";
+            ctx.font = "12px Arial";
+            ctx.fillText(`${i}%`, tickLabelX, tickLabelY + 40);
+        }
+
+        // Calculate position on the line based on percentage
+        const percentage = parseInt(document.getElementById("percentage").value);
+        const indicatorX = startX + ((percentage - 20) / 80) * (endX - startX);
+
+        // Draw red indicator block
+        ctx.fillStyle = "red";
+        ctx.fillRect(indicatorX - 2, centerY - 20, 4, 40);
+
+        // Display selected percentage text
+        ctx.fillStyle = "black";
+        ctx.font = "10px Arial";
+        ctx.fillText(`${percentage}%`, indicatorX, centerY + 30);
+
+        // Display additional info
+        const additionalInfo = document.getElementById("additionalInfo").value;
+        ctx.fillText(additionalInfo, indicatorX, centerY + 50); // Adjusted position for additional info
+    }
+
+    // Function to get category based on percentage range
+    function getCategory(percentage) {
+        if (percentage >= 20 && percentage < 40) {
+            return "Sangat Tidak Setuju";
+        } else if (percentage >= 40 && percentage < 60) {
+            return "Tidak Setuju";
+        } else if (percentage >= 60 && percentage < 80) {
+            return "Ragu-ragu";
+        } else if (percentage >= 80 && percentage < 100) {
+            return "Setuju";
+        } else if (percentage == 100) {
+            return "Sangat Setuju";
+        } else {
+            return "";
+        }
+    }
+</script>
+
+</body>
+</html>
