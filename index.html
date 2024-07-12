@@ -30,7 +30,7 @@
 </div>
 
 <button onclick="drawScale()">Generate Scale</button>
-
+<button onclick="downloadCanvas()">Download Image</button>
 <canvas id="myCanvas" width="700" height="200"></canvas>
 
 <script>
@@ -114,6 +114,21 @@
         }
     }
 </script>
+<script>
+    function downloadCanvas() {
+        const canvas = document.getElementById("myCanvas");
+        const url = canvas.toDataURL(); // Menghasilkan URL gambar dari canvas
 
+        // Buat sebuah elemen <a> untuk mengunduh
+        const downloadLink = document.createElement("a");
+        downloadLink.href = url;
+        downloadLink.download = "rating_scale.png"; // Nama file yang akan diunduh
+
+        // Simulasikan klik pada elemen <a> untuk mengunduh
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+</script>
 </body>
 </html>
